@@ -1,0 +1,61 @@
+﻿import random
+
+def generate_question(difficulty, num_operations, number_range):
+    operations = ['+', '-', '*', '/']
+    question = ""
+    answer = None
+
+    # Генерация случайных чисел и операций
+    for i in range(num_operations):
+        num = random.randint(1, number_range)
+        question += str(num)
+        if i < num_operations - 1:
+            op = random.choice(operations)
+            question += f" {op} "
+    
+    # Считаем корректный ответ
+    try:
+        answer = eval(question)
+    except ZeroDivisionError:
+        # Обработка деления на ноль
+        return generate_question(difficulty, num_operations, number_range)
+    
+    return question, answer
+
+def main():
+    print("Tere tulemast matemaatika teadmiste kontrollija juurde!")
+    
+    # Выбор сложности
+    difficulty = int(input("Valige raskusaste (1, 2, 3): "))
+    num_operations = difficulty + 2  # Количество операций зависит от сложности
+    number_range = difficulty * 10  # Диапазон чисел зависит от сложности
+
+    num_questions = int(input("Sisestage testitavate näidete arv: "))
+    correct_answers = 0
+
+    for _ in range(num_questions):
+        question, answer = generate_question(difficulty, num_operations, number_range)
+        user_answer = input(f"Lahendage näide: {question} = ")
+        
+        # Проверка введенного ответа
+        if float(user_answer) == answer:
+            print("See on õige!")
+            correct_answers += 1
+        else:
+            print(f"Vale! Õige vastus on: {answer}")
+
+    # Оценка по результатам тестирования
+    score = correct_answers / num_questions * 100
+    print(f"\nTeie kogutulemus: {score:.2f}%")
+
+    if score < 60:
+        print("Hindamine: 2")
+    elif score < 75:
+        print("Hindamine: 3")
+    elif score < 90:
+        print("Hindamine: 4")
+    else:
+        print("Hindamine: 5")
+
+if __name__ == "__main__":
+    main()
